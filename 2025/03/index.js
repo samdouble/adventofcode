@@ -3,28 +3,36 @@ const fs = require('fs');
 const input = fs.readFileSync('input.txt', 'utf8');
 const banks = input.split('\n');
 
-const getMaxJoltage = (bank) => {
-    const bankNumbers = bank.split('').map(Number);
-    let first = 0;
-    let second = 0;
-    for (let i = 0; i < bankNumbers.length - 1; i++) {
-        if (bankNumbers[i] > first) {
-            first = bankNumbers[i];
-            second = Math.max(...bankNumbers.slice(i + 1));
-        }
+const getMaxJoltage = (bank, nbInEachBank) => {
+    if (nbInEachBank === 0) {
+        return [];
     }
-    return parseInt([first, second].join(''));
-}
-
-const getPassword = (banks) => {
-    let joltage = 0;
-    for (const bank of banks) {
-        joltage += getMaxJoltage(bank);
+    const bankNumbers = bank.split('').map(Number);
+    let joltage = new Array(nbInEachBank).fill(0);
+    for (let i = 0; i < bankNumbers.length - nbInEachBank + 1; i++) {
+        if (bankNumbers[i] > joltage[0]) {
+            joltage = [
+                bankNumbers[i],
+                ...getMaxJoltage(bankNumbers.slice(i + 1).join(''), nbInEachBank - 1),
+            ]
+        }
     }
     return joltage;
 }
 
-console.log(getPassword(banks)); // 1st try, 9 pts
+const getPassword = (banks, nbInEachBank) => {
+    let joltage = 0;
+    for (const bank of banks) {
+        const bankJoltage = parseInt(getMaxJoltage(bank, nbInEachBank).join(''));
+        joltage += bankJoltage;
+    }
+    return joltage;
+}
+
+// Part 1
+console.log(getPassword(banks, 2)); // 1st try, 9 pts
+// Part 2
+console.log(getPassword(banks, 12)); // 1st try, 14 pts
 
 module.exports = {
     getPassword,
