@@ -3,19 +3,28 @@ const fs = require('fs');
 const input = fs.readFileSync('input.txt', 'utf8');
 const rows = input.split('\n');
 
+const possibilities = {};
+
 const getPossibilitiesForBeam = (position, beamRows) => {
     let nbPossibilities = 1;
+    if (Object.hasOwnProperty.call(possibilities, `${position}_${beamRows.length}`)) {
+        return possibilities[`${position}_${beamRows.length}`];
+    }
     if (beamRows.length === 0) {
+        return 1;
     }
     else if (beamRows[0][position] === '^') {
-        nbPossibilities = (
-            nbPossibilities * getPossibilitiesForBeam(position - 1, beamRows.slice(1))
-        ) + (
-            nbPossibilities * getPossibilitiesForBeam(position + 1, beamRows.slice(1))
-        );
+        const nbPossibilitiesLeft = getPossibilitiesForBeam(position - 1, beamRows.slice(1));
+        const nbPossibilitiesRight = getPossibilitiesForBeam(position + 1, beamRows.slice(1));
+        nbPossibilities = nbPossibilitiesLeft + nbPossibilitiesRight;
+        possibilities[`${position}_${beamRows.length}`] = nbPossibilities;
+        possibilities[`${position - 1}_${beamRows.length - 1}`] = nbPossibilitiesLeft;
+        possibilities[`${position + 1}_${beamRows.length - 1}`] = nbPossibilitiesRight;
     }
     else if (beamRows[0][position] === '.') {
-        nbPossibilities *= getPossibilitiesForBeam(position, beamRows.slice(1));
+        nbPossibilities = getPossibilitiesForBeam(position, beamRows.slice(1));
+        possibilities[`${position}_${beamRows.length}`] = nbPossibilities;
+        possibilities[`${position}_${beamRows.length - 1}`] = nbPossibilities;
     }
     return nbPossibilities;
 }
