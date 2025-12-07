@@ -4,29 +4,25 @@ const input = fs.readFileSync('input.txt', 'utf8');
 const rows = input.split('\n');
 
 const getPossibilitiesForBeam = (position, beamRows) => {
-    const possibilities = [];
+    let nbPossibilities = 1;
     if (beamRows.length === 0) {
-        possibilities.push([position]);
     }
     else if (beamRows[0][position] === '^') {
-        for (const possibility of getPossibilitiesForBeam(position - 1, beamRows.slice(1))) {
-            possibilities.push([position - 1, ...possibility]);
-        }
-        for (const possibility of getPossibilitiesForBeam(position + 1, beamRows.slice(1))) {
-            possibilities.push([position + 1, ...possibility]);
-        }
+        nbPossibilities = (
+            nbPossibilities * getPossibilitiesForBeam(position - 1, beamRows.slice(1))
+        ) + (
+            nbPossibilities * getPossibilitiesForBeam(position + 1, beamRows.slice(1))
+        );
     }
     else if (beamRows[0][position] === '.') {
-        for (const possibility of getPossibilitiesForBeam(position, beamRows.slice(1))) {
-            possibilities.push([position, ...possibility]);
-        }
+        nbPossibilities *= getPossibilitiesForBeam(position, beamRows.slice(1));
     }
-    return possibilities;
+    return nbPossibilities;
 }
 
 const countQuantumSplits = (rows) => {
     const initialPosition = rows[0].indexOf('S');
-    return getPossibilitiesForBeam(initialPosition, rows.slice(1)).length;
+    return getPossibilitiesForBeam(initialPosition, rows.slice(1));
 }
 
 const countSplits = (rows) => {
