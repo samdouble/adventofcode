@@ -66,7 +66,7 @@ const getResult = (rows, cephalopod = false) => {
 // Part 1
 console.log(getResult(rows)); // 1st try, 19 pts
 // Part 2
-console.log(getResult(rows, true)); // 
+console.log(getResult(rows, true)); // 1st try, 19 pts
 
 module.exports = {
     getResult,
