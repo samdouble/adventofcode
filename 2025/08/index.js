@@ -73,7 +73,7 @@ const getSolution = (rows, nbConnections, nbCircuits) => {
 // Part 1
 console.log(getSolution(rows, 1000, 3).solution1); // 1st try, N pts
 // Part 2
-console.log(getSolution(rows, 1000000, 1000).solution2); //
+console.log(getSolution(rows, 1000000, 1000).solution2); // 1st try, N pts
 
 module.exports = {
     getSolution,

@@ -123,7 +123,7 @@ const getLargestRectangleArea = (redTiles, redAndGreen = false) => {
 // Part 1
 console.log(getLargestRectangleArea(redTiles)); // 1st try, N - 1 pts
 // Part 2
-console.log(getLargestRectangleArea(redTiles, true)); // Tried 4618517036
+console.log(getLargestRectangleArea(redTiles, true)); // // 3rd try, N pts, very slow
 
 module.exports = {
     getLargestRectangleArea,
