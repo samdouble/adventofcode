@@ -80,7 +80,7 @@ const getAllPointsOnSideOfRectangle = (rectangle) => {
 }
 
 const getLargestRectangleArea = (redTiles, redAndGreen = false) => {
-    let largestArea = 351098397;
+    let largestArea = 0;
     if (redAndGreen) {
         const path = [];
         for (let i = 0; i < redTiles.length; i++) {
@@ -90,7 +90,7 @@ const getLargestRectangleArea = (redTiles, redAndGreen = false) => {
                 path.push([redTiles[i], redTiles[i + 1]]);
             }
         }
-        for (let i = 100; i < 200; i++) {
+        for (let i = 0; i < redTiles.length; i++) {
             for (let j = i + 1; j < redTiles.length; j++) {
                 console.log(i, j, largestArea);
                 // Optimization
@@ -122,7 +122,7 @@ const getLargestRectangleArea = (redTiles, redAndGreen = false) => {
 
 // Part 1
 console.log(getLargestRectangleArea(redTiles)); // 1st try, N - 1 pts
-// // Part 2
+// Part 2
 console.log(getLargestRectangleArea(redTiles, true)); // Tried 4618517036
 
 module.exports = {
