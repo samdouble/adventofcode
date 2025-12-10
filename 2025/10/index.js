@@ -34,24 +34,24 @@ const applyButton = (lights, button) => {
     return lights.map((light, i) => (light + button[i]) % 2);
 };
 
-const getMinNumberPushesForMachine = (lights, buttons, currentLightsState, history, minNbPushes) => {
+const getMinNumberPushesForMachine = (lights, buttons, currentLightsState, history, combinations) => {
     const diff = lights.map((light, i) => Math.abs(light - currentLightsState[i]));
 
-    if (arrayOfArrayIncludes(buttons, diff)) {
-        return 1;
+    if (combinations[JSON.stringify(diff)]) {
+        return combinations[JSON.stringify(diff)];
     }
-    for (const button of buttons) {
-        console.log("Testing button", button, history, minNbPushes);
-        const newLightsState = applyButton(currentLightsState, button);
-        if (arrayOfArrayIncludes(history, newLightsState)) {
-            continue;
-        }
-        const minNbPushesWithButton = 1 + getMinNumberPushesForMachine(lights, buttons, newLightsState, [...history, newLightsState], minNbPushes);
-        if (minNbPushesWithButton < minNbPushes) {
-            minNbPushes = minNbPushesWithButton;
-        }
+    const sensibleButtons = buttons.filter(button => !arrayOfArrayIncludes(history, applyButton(currentLightsState, button)));
+    if (sensibleButtons.length === 0) {
+        return Infinity;
     }
-    return Infinity;
+
+    return 1 + Math.min(
+        ...sensibleButtons.map(button => {
+            const newLightsState = applyButton(currentLightsState, button);
+            console.log("Testing button", button, newLightsState, history);
+            return getMinNumberPushesForMachine(lights, buttons, newLightsState, [...history, newLightsState], combinations);
+        })
+    );
 };
 
 const getMinTotalNumberOfPushes = (machines) => {
@@ -62,7 +62,12 @@ const getMinTotalNumberOfPushes = (machines) => {
             new Array(lights.length).fill(0).map((_, index) => b.includes(index) ? 1 : 0))
         );
         const initialState = new Array(lights.length).fill(0);
-        const minNbPushesForMachine = getMinNumberPushesForMachine(lights, buttons, initialState, [initialState], Infinity);
+        const combinations = buttons.reduce((acc, button) => {
+            acc[JSON.stringify(button)] = 1;
+            return acc;
+        }, {});
+        const minNbPushesForMachine = getMinNumberPushesForMachine(lights, buttons, initialState, [initialState], combinations);
+        console.log(minNbPushesForMachine);
         totalNbPushes += minNbPushesForMachine;
     }
     return totalNbPushes;
