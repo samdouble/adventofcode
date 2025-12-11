@@ -17,23 +17,23 @@ describe('getSolution', () => {
             }, 'you', 'out')
         ).toEqual(5);
     });
-    // it('Example 2', () => {
-    //     expect(
-    //         getNumberOfValidPaths({
-    //             svr: ['aaa', 'bbb'],
-    //             aaa: ['fft'],
-    //             fft: ['ccc'],
-    //             bbb: ['tty'],
-    //             tty: ['ccc'],
-    //             ccc: ['ddd', 'eee'],
-    //             ddd: ['hub'],
-    //             hub: ['fff'],
-    //             eee: ['dac'],
-    //             dac: ['fff'],
-    //             fff: ['ggg', 'hhh'],
-    //             ggg: ['out'],
-    //             hhh: ['out'],
-    //         }, 'you', 'out')
-    //     ).toEqual(2);
-    // });
+    it('Example 2', () => {
+        expect(
+            getNumberOfValidPaths({
+                svr: ['aaa', 'bbb'],
+                aaa: ['fft'],
+                fft: ['ccc'],
+                bbb: ['tty'],
+                tty: ['ccc'],
+                ccc: ['ddd', 'eee'],
+                ddd: ['hub'],
+                hub: ['fff'],
+                eee: ['dac'],
+                dac: ['fff'],
+                fff: ['ggg', 'hhh'],
+                ggg: ['out'],
+                hhh: ['out'],
+            }, 'svr', 'out', ['fft', 'dac'])
+        ).toEqual(2);
+    });
 });

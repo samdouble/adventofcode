@@ -9,6 +9,8 @@ const paths = input.split('\n').reduce((acc, pathStr) => {
     };
 }, {});
 
+const getValidPathsFrom = {};
+
 const getValidPaths = (paths, entry, exit) => {
     if (entry === exit) {
         return [[exit]];
@@ -25,12 +27,16 @@ const getValidPaths = (paths, entry, exit) => {
     return validPaths;
 };
 
-const getNumberOfValidPaths = (paths, entry, exit) => {
-    return getValidPaths(paths, entry, exit).length;
+const getNumberOfValidPaths = (paths, entry, exit, mustGoThrough = []) => {
+    const validPaths = getValidPaths(paths, entry, exit)
+        .filter(p => mustGoThrough.every(mustGoThroughValue => p.includes(mustGoThroughValue)));
+    return validPaths.length;
 }
 
 // Part 1
-// console.log(getNumberOfValidPaths(paths, 'you', 'out')); // 
+console.log(getNumberOfValidPaths(paths, 'you', 'out'));
+// Part 2
+// console.log(getNumberOfValidPaths(paths, 'svr', 'out', ['dac', 'fft']));
 
 module.exports = {
     getNumberOfValidPaths,
