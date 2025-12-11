@@ -1,9 +1,9 @@
-const { getNumberOfPaths } = require('./index');
+const { getNumberOfValidPaths } = require('./index');
 
 describe('getSolution', () => {
     it('Example 1', () => {
         expect(
-            getNumberOfPaths({
+            getNumberOfValidPaths({
                 aaa: ['you', 'hhh'],
                 you: ['bbb', 'ccc'],
                 bbb: ['ddd', 'eee'],
@@ -17,4 +17,23 @@ describe('getSolution', () => {
             }, 'you', 'out')
         ).toEqual(5);
     });
+    // it('Example 2', () => {
+    //     expect(
+    //         getNumberOfValidPaths({
+    //             svr: ['aaa', 'bbb'],
+    //             aaa: ['fft'],
+    //             fft: ['ccc'],
+    //             bbb: ['tty'],
+    //             tty: ['ccc'],
+    //             ccc: ['ddd', 'eee'],
+    //             ddd: ['hub'],
+    //             hub: ['fff'],
+    //             eee: ['dac'],
+    //             dac: ['fff'],
+    //             fff: ['ggg', 'hhh'],
+    //             ggg: ['out'],
+    //             hhh: ['out'],
+    //         }, 'you', 'out')
+    //     ).toEqual(2);
+    // });
 });

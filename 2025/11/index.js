@@ -9,21 +9,29 @@ const paths = input.split('\n').reduce((acc, pathStr) => {
     };
 }, {});
 
-const getNumberOfPaths = (paths, entry, exit) => {
+const getValidPaths = (paths, entry, exit) => {
     if (entry === exit) {
-        return 1;
+        return [[exit]];
     }
     const nodes = paths[entry];
-    let numberOfPaths = 0;
+    let validPaths = [];
     for (const node of nodes) {
-        numberOfPaths += getNumberOfPaths(paths, node, exit);
+        const validPathsFromNode = getValidPaths(paths, node, exit)
+        validPaths.push(
+            ...validPathsFromNode
+            .map(p => [entry, ...p])
+        );
     }
-    return numberOfPaths;
+    return validPaths;
 };
 
+const getNumberOfValidPaths = (paths, entry, exit) => {
+    return getValidPaths(paths, entry, exit).length;
+}
+
 // Part 1
-console.log(getNumberOfPaths(paths, 'you', 'out')); // 1st try, N points
+// console.log(getNumberOfValidPaths(paths, 'you', 'out')); // 
 
 module.exports = {
-    getNumberOfPaths,
+    getNumberOfValidPaths,
 };

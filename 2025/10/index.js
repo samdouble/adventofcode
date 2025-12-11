@@ -35,24 +35,46 @@ const applyButton = (lights, button, useJoltages = false) => {
     return lights.map((light, i) => (light + button[i]) % 2);
 };
 
+const isArrayMultipleOf = (array1, array2) => {
+    const multiples = array1.map((value, index) => value / array2[index]);
+    if (!Number.isInteger(multiples[0])) {
+        return 0;
+    }
+    if (!multiples.every(multiple => multiple === multiples[0])) {
+        return 0;
+    }
+    return multiples[0];
+}
+
 const getMinNumberPushesForMachine = (desiredState, buttons, currentState, combinations, useJoltages) => {
     const diff = desiredState.map((s, i) => Math.abs(s - currentState[i]));
 
     if (combinations[JSON.stringify(diff)]) {
         return combinations[JSON.stringify(diff)];
     }
+    // if (useJoltages) {
+    //     for (const [combination, nbPushes] of Object.entries(combinations)) {
+    //         const multiple = isArrayMultipleOf(diff, JSON.parse(combination));
+    //         if (multiple) {
+    //             return nbPushes * multiple;
+    //         }
+    //     }
+    // }
     for (const [combination, nbPushes] of Object.entries(combinations)) {
-        for (const button of buttons) {
-            const newStateWithButton = applyButton(JSON.parse(combination), button, useJoltages);
+        const combinationsToCheck = [
+            ...buttons.map(b => [JSON.stringify(b), 1]),
+            // ...Object.entries(combinations),
+        ];
+        for (const [combination2, nbPushes2] of combinationsToCheck) {
+            const newStateWithButton = applyButton(JSON.parse(combination), JSON.parse(combination2), useJoltages);
             if (
                 !combinations[JSON.stringify(newStateWithButton)]
-                || combinations[JSON.stringify(newStateWithButton)] > nbPushes + 1
+                || combinations[JSON.stringify(newStateWithButton)] > nbPushes + nbPushes2
             ) {
-                combinations[JSON.stringify(newStateWithButton)] = nbPushes + 1;
+                combinations[JSON.stringify(newStateWithButton)] = nbPushes + nbPushes2;
             }
         }
     }
-    console.log(combinations);
     return getMinNumberPushesForMachine(desiredState, buttons, currentState, combinations, useJoltages);
 };
 
@@ -70,7 +92,6 @@ const getMinTotalNumberOfPushes = (machines, useJoltages = false) => {
         };
         const desiredState = useJoltages ? joltages : lights;
         const minNbPushesForMachine = getMinNumberPushesForMachine(desiredState, buttons, initialState, combinations, useJoltages);
-        console.log(i, machine, minNbPushesForMachine);
         totalNbPushes += minNbPushesForMachine;
         i++;
     }
@@ -78,9 +99,9 @@ const getMinTotalNumberOfPushes = (machines, useJoltages = false) => {
 };
 
 // Part 1
-// console.log(getMinTotalNumberOfPushes(machines)); // 1st try, N pts
+console.log(getMinTotalNumberOfPushes(machines)); // 1st try, N pts
 // Part 2
-//console.log(getMinTotalNumberOfPushes(machines, true)); // 
+console.log(getMinTotalNumberOfPushes(machines, true)); // -
 
 module.exports = {
     getMinTotalNumberOfPushes,
