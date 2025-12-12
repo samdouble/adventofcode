@@ -9,18 +9,30 @@ const paths = input.split('\n').reduce((acc, pathStr) => {
     };
 }, {});
 
-const getValidPathsFrom = {};
+const pathGoesThroughAllNodes = (path, mustGoThrough) => {
+    return mustGoThrough.every(mustGoThroughValue => path.includes(mustGoThroughValue))
+};
 
-const getValidPaths = (paths, entry, exit) => {
+const getValidPaths = (paths, entry, exit, mustGoThrough, validPathsFrom, history = []) => {
     if (entry === exit) {
         return [[exit]];
     }
     const nodes = paths[entry];
     let validPaths = [];
     for (const node of nodes) {
-        const validPathsFromNode = getValidPaths(paths, node, exit)
+        let validPathsFromNode;
+        if (validPathsFrom[node]) {
+            validPathsFromNode = validPathsFrom[node];
+        } else {
+            validPathsFromNode = getValidPaths(paths, node, exit, mustGoThrough, validPathsFrom, [...history, node]);
+            validPathsFrom[node] = validPathsFromNode;
+        }
         validPaths.push(
             ...validPathsFromNode
+            .filter(p => {
+                const set = new Set(p);
+                return p.length === set.size;
+            })
             .map(p => [entry, ...p])
         );
     }
@@ -28,8 +40,9 @@ const getValidPaths = (paths, entry, exit) => {
 };
 
 const getNumberOfValidPaths = (paths, entry, exit, mustGoThrough = []) => {
-    const validPaths = getValidPaths(paths, entry, exit)
-        .filter(p => mustGoThrough.every(mustGoThroughValue => p.includes(mustGoThroughValue)));
+    const validPathsFrom = {};
+    const validPaths = getValidPaths(paths, entry, exit, mustGoThrough, validPathsFrom)
+        .filter(p => pathGoesThroughAllNodes(p, mustGoThrough));
     return validPaths.length;
 }
 
