@@ -1,7 +1,7 @@
 const { getPassword, rotate } = require('./index');
 
 describe('rotate', () => {
-    it('should rotate correctly for given direction and distance', () => {
+    it('Example 1', () => {
         expect(rotate(50, 'R', 68)).toEqual({ newPos: 18, nbClickedOn0: 1 });
         expect(rotate(50, 'L', 30)).toEqual({ newPos: 20, nbClickedOn0: 0 });
         expect(rotate(50, 'R', 48)).toEqual({ newPos: 98, nbClickedOn0: 0 });
