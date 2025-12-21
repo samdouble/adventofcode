@@ -15,9 +15,20 @@ const getTotalDistance = (l1, l2) => {
     return totalDistance;
 }
 
+const getSimilarityScore = (l1, l2) => {
+    let similarityScore = 0;
+    for (let i = 0; i < l1.length; i++) {
+        similarityScore += l1[i] * l2.filter(e => e === l1[i]).length;
+    }
+    return similarityScore;
+};
+
 // Part 1
 console.log(getTotalDistance(list1, list2));
+// Part 2
+console.log(getSimilarityScore(list1, list2));
 
 module.exports = {
     getTotalDistance,
+    getSimilarityScore,
 };
