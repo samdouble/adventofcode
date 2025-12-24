@@ -1,4 +1,4 @@
-const { countWord, countWordOnLine } = require('./index');
+const { countWord, countWordOnLine, countWordInCross } = require('./index');
 
 describe('countWord', () => {
     it('Example 1', () => {
@@ -40,5 +40,23 @@ describe('countWordOnLine', () => {
         expect(countWordOnLine('SAXAMASAAA'.split(''), 'XMAS', true)).toEqual(0);
         expect(countWordOnLine('MAMMMXMMMM'.split(''), 'XMAS', true)).toEqual(0);
         expect(countWordOnLine('MXMXAXMASX'.split(''), 'XMAS', true)).toEqual(1);
+    });
+});
+
+describe('countWordInCross', () => {
+    it('Example 2', () => {
+        expect(
+            countWordInCross([
+                'MMMSXXMASM',
+                'MSAMXMSMSA',
+                'AMXSXMAAMM',
+                'MSAMASMSMX',
+                'XMASAMXAMM',
+                'XXAMMXXAMA',
+                'SMSMSASXSS',
+                'SAXAMASAAA',
+                'MAMMMXMMMM',
+                'MXMXAXMASX',
+            ], 'MAS')).toEqual(9);
     });
 });

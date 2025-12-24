@@ -21,15 +21,18 @@ const countWordOnLine = (chars, word, adjacent) => {
     return (chars.join('').match(regex) || []).length;
 };
 
-const countWord = (lines, word, adjacent) => {
+const countWordHorizontally = (lines, word, adjacent) => {
     let count = 0;
-    // Horizontally
     for (const line of lines) {
         count += countWordOnLine(line.split(''), word, adjacent);
         // Reverse
         count += countWordOnLine(line.split(''), word.split('').reverse().join(''), adjacent);
     }
-    // Vertically
+    return count;
+};
+
+const countWordVertically = (lines, word, adjacent) => {
+    let count = 0;
     const columns = lines[0].split('')
         .map((_c, index) => {
             return lines.reduce((acc, l) => acc + l[index], [])
@@ -39,7 +42,12 @@ const countWord = (lines, word, adjacent) => {
         // Reverse
         count += countWordOnLine(column.split(''), word.split('').reverse().join(''), adjacent);
     }
-    // Diagonally SW-NE
+    return count;
+};
+
+const countWordDiagonally = (lines, word, adjacent) => {
+    let count = 0;
+    // SW - NE
     const diagonalsSWNE = [];
     for (let i = 0; i < lines.length; i++) {
         let diagonal = '';
@@ -63,9 +71,8 @@ const countWord = (lines, word, adjacent) => {
         // Reverse
         count += countWordOnLine(diagonal.split(''), word.split('').reverse().join(''), adjacent);
     }
-    // Diagonally NW - SE
+    // NW - SE
     const diagonalsNWSE = [];
-    //(0, 0)(1, 1)
     for (let i = 0; i < lines.length; i++) {
         let diagonal = '';
         for (let j = 0; j <= Math.min(lines.length - 1 - i, lines[i].length - 1); j++) {
@@ -91,10 +98,34 @@ const countWord = (lines, word, adjacent) => {
     return count;
 };
 
+const countWord = (lines, word, adjacent) => {
+    return (
+        countWordHorizontally(lines, word, adjacent)
+        + countWordVertically(lines, word, adjacent)
+        + countWordDiagonally(lines, word, adjacent)
+    );
+};
+
+const countWordInCross = (lines, word) => {
+    let count = 0;
+    for (let i = 0; i <= lines.length - word.length; i++) {
+        for (let j = 0; j <= lines[i].length - word.length; j++) {
+            const matrix = lines.slice(i, i + word.length).map(l => l.substring(j, j + word.length));
+            if (countWordDiagonally(matrix, word, true) === 2) {
+                count++;
+            }
+        }
+    }
+    return count;
+};
+
 // Part 1
 console.log(countWord(lines, 'XMAS', true));
+// Part 2
+console.log(countWordInCross(lines, 'MAS'));
 
 module.exports = {
     countWord,
     countWordOnLine,
+    countWordInCross,
 };
